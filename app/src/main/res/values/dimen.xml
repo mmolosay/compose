@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--~~~~~~~~~~~~~~~~~~~~ OFFSET ~~~~~~~~~~~~~~~~~~~~-->
+    <dimen name="offset_4">4dp</dimen>
+    <dimen name="offset_8">8dp</dimen>
+    <dimen name="offset_12">12dp</dimen>
+    <dimen name="offset_16">16dp</dimen>
+    <dimen name="offset_24">24dp</dimen>
+    <dimen name="offset_32">32dp</dimen>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~ TEXT ~~~~~~~~~~~~~~~~~~~~~-->
+    <dimen name="text_size_9">9sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_28">28sp</dimen>
+    <dimen name="text_size_32">32sp</dimen>
+    <dimen name="text_size_38">38sp</dimen>
+    <dimen name="text_size_46">46sp</dimen>
+    <dimen name="text_size_54">54sp</dimen>
+    <dimen name="text_size_60">60sp</dimen>
+
+    <item name="text_spacing_small" type="dimen" format="float">0.010</item>
+    <item name="text_spacing_medium" type="dimen" format="float">0.025</item>
+    <item name="text_spacing_big" type="dimen" format="float">0.040</item>
+
+    <dimen name="text_size_default">12sp</dimen>
+    <dimen name="text_size_modest">10sp</dimen>
+    <dimen name="text_size_bold">12sp</dimen>
+    <dimen name="text_size_accent">12sp</dimen>
+
+    <!--~~~~~~~~~~~~~~~~~~~~ COMMON ~~~~~~~~~~~~~~~~~~~~-->
+    <dimen name="elevation_0">0dp</dimen>
+    <dimen name="elevation_4">4dp</dimen>
+    <dimen name="elevation_8">8dp</dimen>
+
+    <dimen name="alpha_0" type="dimen" format="float">0.0</dimen>
+    <dimen name="alpha_1" type="dimen" format="float">1.0</dimen>
+
+    <dimen name="roundness_8">8dp</dimen>
+
+    <!--~~~~~~~~~~~~~~~~~~~~ WIDGET ~~~~~~~~~~~~~~~~~~~~-->
+    <dimen name="btn_text_size_default">@dimen/text_size_default</dimen>
+    <dimen name="btn_border_width">2dp</dimen>
+
+    <dimen name="btn_cyan_text_size">@dimen/text_size_default</dimen>
+
+    <dimen name="btn_rounded_border_text_size">@dimen/text_size_default</dimen>
+
+    <!--~~~~~~~~~~~~~~~~~~~~ DIALOGS ~~~~~~~~~~~~~~~~~~~-->
+    <dimen name="d_bg_rounded_radius">8dp</dimen>
+
+    <!--~~~~~~~~~~~~~~~~~~~~ LISTS ~~~~~~~~~~~~~~~~~~~~~-->
+
+    <!--~~~~~~~~~~~~~~~~~~ ANIMATIONS ~~~~~~~~~~~~~~~~~~-->
+
+    <!--~~~~~~~~~~~~~~~~~~~~ STUFF ~~~~~~~~~~~~~~~~~~~~~-->
+
+</resources>
