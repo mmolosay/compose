@@ -7,9 +7,8 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fadeScrollbars="false"
         android:fillViewport="true"
-        android:scrollbarSize="2dp"
+        android:scrollbars="none"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,15 +18,17 @@
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="2dp">
+            android:layout_height="wrap_content">
 
             <com.ordolabs.compose.ui.view.PianoKeyboardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:layout_gravity="center"
+
                 app:blackKeysColor="@color/chord_keyboard_blacks"
                 app:octaveCount="@integer/chord_keyboard_octaves"
-                app:whiteKeysColor="@color/chord_keyboard_whites" />
+                app:whiteKeysColor="@color/chord_keyboard_whites"
+                app:coerceInWidth="true"/>
 
         </FrameLayout>
 

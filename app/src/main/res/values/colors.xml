@@ -71,7 +71,7 @@
     <!--~~~~~~~~~~~~~~~~~~ ANIMATION ~~~~~~~~~~~~~~~~~~~-->
 
     <!--~~~~~~~~~~~~~~~~~~ HOME CHORD ~~~~~~~~~~~~~~~~~~-->
-    <color name="chord_keyboard_whites">@color/ash_cc</color>
+    <color name="chord_keyboard_whites">@color/ash_d6</color>
     <color name="chord_keyboard_blacks">@color/dark_26</color>
 
     <!--~~~~~~~~~~~~~~~~~~~~ STUFF ~~~~~~~~~~~~~~~~~~~~~-->

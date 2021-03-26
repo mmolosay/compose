@@ -181,6 +181,7 @@
         <attr name="whiteKeysColor" format="color"/>
         <attr name="blackKeysColor" format="color"/>
         <attr name="octaveCount" format="integer"/>
+        <attr name="coerceInWidth" format="boolean"/>
     </declare-styleable>
 
 </resources>

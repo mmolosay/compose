@@ -15,6 +15,7 @@ class PianoKeyboardView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private var octaveCount: Int = OCTAVE_COUNT_DEFAULT
+    private var shouldCoerceInWidth: Boolean = false
 
     private val underneathPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -36,33 +37,72 @@ class PianoKeyboardView @JvmOverloads constructor(
         parseWhiteKeysColorAttr(typed)
         parseBlackKeysColorAttr(typed)
         parseOctaveCountAttr(typed)
+        parseShouldCoerceInWidthAttr(typed)
         typed.recycle()
     }
 
     private fun parseWhiteKeysColorAttr(typed: TypedArray) {
-        whitePaint.color =
-            typed.getColor(R.styleable.PianoKeyboardView_whiteKeysColor, WHITE_KEYS_COLOR_DEFAULT)
+        whitePaint.color = typed.getColor(
+            R.styleable.PianoKeyboardView_whiteKeysColor,
+            WHITE_KEYS_COLOR_DEFAULT
+        )
     }
 
     private fun parseBlackKeysColorAttr(typed: TypedArray) {
-        blackPaint.color =
-            typed.getColor(R.styleable.PianoKeyboardView_blackKeysColor, BLACK_KEYS_COLOR_DEFAULT)
+        blackPaint.color = typed.getColor(
+            R.styleable.PianoKeyboardView_blackKeysColor,
+            BLACK_KEYS_COLOR_DEFAULT
+        )
     }
 
     private fun parseOctaveCountAttr(typed: TypedArray) {
-        octaveCount =
-            typed.getInteger(R.styleable.PianoKeyboardView_octaveCount, OCTAVE_COUNT_DEFAULT)
+        octaveCount = typed.getInteger(
+            R.styleable.PianoKeyboardView_octaveCount,
+            OCTAVE_COUNT_DEFAULT
+        )
+    }
+
+    private fun parseShouldCoerceInWidthAttr(typed: TypedArray) {
+        shouldCoerceInWidth = typed.getBoolean(
+            R.styleable.PianoKeyboardView_coerceInWidth,
+            SHOULD_COERCE_IN_WIDTH_DEFAULT
+        )
+    }
+
+    fun setWhiteKeysColor(color: Int) {
+        whitePaint.color = color
+    }
+
+    fun setBlackKeysColor(color: Int) {
+        blackPaint.color = color
+    }
+
+    fun setOctaveCout(count: Int) {
+        octaveCount = count
+    }
+
+    fun setShouldCoerceInWidth(state: Boolean) {
+        shouldCoerceInWidth = state
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        // if layout_width="wrap_content", set width to one octave exactly
-        val widthSpec = MeasureSpec.getMode(widthMeasureSpec)
-        if (widthSpec == MeasureSpec.AT_MOST || widthSpec == MeasureSpec.UNSPECIFIED) {
+
+        if (shouldCoerceInWidth) {
+            val width = MeasureSpec.getSize(widthMeasureSpec)
             setMeasuredDimension(
-                computeOctavesWidth(octaveCount).toInt(),
-                MeasureSpec.getSize(heightMeasureSpec)
+                width,
+                getViewHeightFromWidth(width)
             )
+        } else {
+            // if layout_width="wrap_content", set width to one octave exactly
+            val widthSpec = MeasureSpec.getMode(widthMeasureSpec)
+            if (widthSpec == MeasureSpec.AT_MOST || widthSpec == MeasureSpec.UNSPECIFIED) {
+                setMeasuredDimension(
+                    computeOctavesWidth(octaveCount).toInt(),
+                    MeasureSpec.getSize(heightMeasureSpec)
+                )
+            }
         }
     }
 
@@ -145,12 +185,19 @@ class PianoKeyboardView @JvmOverloads constructor(
         return (this.height.takeIf { it != 0 } ?: this.measuredHeight).toFloat()
     }
 
+    private fun getViewHeightFromWidth(newWidth: Int): Int {
+        val whites = octaveCount * 7
+        val whiteWidth = (newWidth - (WHITE_KEYS_SPACING * (whites - 1))) / whites
+        return (whiteWidth / WHITE_KEY_WIDTH * WHITE_KEY_HEIGHT).toInt()
+    }
+
     companion object {
         private const val WHITE_KEYS_COLOR_DEFAULT = Color.LTGRAY
         private const val BLACK_KEYS_COLOR_DEFAULT = Color.DKGRAY
         private const val KEYS_COLOR_UNDERNEATH = Color.BLACK
 
         private const val OCTAVE_COUNT_DEFAULT = 2
+        private const val SHOULD_COERCE_IN_WIDTH_DEFAULT = false
 
         private const val WHITE_KEYS_ROUNDESS = 10f
         private const val WHITE_KEYS_SPACING = 4f

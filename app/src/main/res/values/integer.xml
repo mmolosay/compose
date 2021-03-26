@@ -13,6 +13,6 @@
 
     <integer name="vibration_duration_default">200</integer>
 
-    <integer name="chord_keyboard_octaves">6</integer>
+    <integer name="chord_keyboard_octaves">2</integer>
 
 </resources>
