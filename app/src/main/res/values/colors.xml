@@ -6,6 +6,7 @@
     <color name="ash_ed">#EDEDED</color>
     <color name="ash_d6">#D6D6D6</color>
     <color name="ash_cc">#CCCCCC</color>
+    <color name="gray_a5">#A5A5A5</color>
     <color name="gray_76">#767676</color>
     <color name="dark_26">#262626</color>
     <color name="black">#000000</color>
@@ -59,6 +60,10 @@
     <color name="edit_ash_ed_disabled">@color/ash_ed_disabled</color>
     <color name="edit_ash_ed_border">@color/ash_d6</color>
     <color name="edit_ash_ed_border_disabled">@color/ash_cc</color>
+
+    <color name="tabs_indicator">@color/cyan</color>
+    <color name="tabs_text_default">@color/gray_a5</color>
+    <color name="tabs_text_selected">@color/cyan</color>
 
     <!--~~~~~~~~~~~~~~~~~~~~ LISTS ~~~~~~~~~~~~~~~~~~~~~-->
     <color name="divider_e1">#E1E1E1</color>

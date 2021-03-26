@@ -1,4 +1,4 @@
-package com.ordolabs.compose.ui.adapter.base
+package com.ordolabs.compose.ui.adapter.recycler.base
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

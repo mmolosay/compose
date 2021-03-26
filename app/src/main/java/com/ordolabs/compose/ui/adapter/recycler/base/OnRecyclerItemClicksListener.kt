@@ -1,4 +1,4 @@
-package com.ordolabs.compose.ui.adapter.base
+package com.ordolabs.compose.ui.adapter.recycler.base
 
 interface OnRecyclerItemClicksListener {
 

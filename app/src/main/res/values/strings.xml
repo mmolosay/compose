@@ -2,7 +2,9 @@
     <!--~~~~~~~~~~~~~~~~~~~~ COMMON ~~~~~~~~~~~~~~~~~~~~-->
     <string name="app_name">Compose</string>
 
-    <!--~~~~~~~~~~~~~~~~~~ MAIN SCREEN ~~~~~~~~~~~~~~~~~-->
+    <!--~~~~~~~~~~~~~~~~~~~~~ MAIN ~~~~~~~~~~~~~~~~~~~~~-->
+    <string name="home_chord_tab">Chord</string>
+    <string name="home_progression_tab">Progression</string>
 
     <!--~~~~~~~~~~~~~~~~ RECYCLER ITEMS ~~~~~~~~~~~~~~~~-->
 

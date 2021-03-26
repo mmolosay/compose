@@ -136,6 +136,24 @@
         <item name="android:padding">@dimen/offset_16</item>
     </style>
 
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/TabLayout.TextAppearance</item>
+        <item name="tabTextColor">@color/tabs_text_default</item>
+        <item name="tabSelectedTextColor">@color/tabs_text_selected</item>
+        <item name="tabGravity">center</item>
+        <item name="tabIndicator">@drawable/tabs_indicator</item>
+        <item name="tabIndicatorHeight">@dimen/tabs_indicator_height</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabIndicatorColor">@color/tabs_indicator</item>
+    </style>
+
+    <style name="TabLayout.TextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/tabs_text_size</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <!--~~~~~~~~~~~~~~~~~~~~~ LISTS ~~~~~~~~~~~~~~~~~~~~-->
 
 

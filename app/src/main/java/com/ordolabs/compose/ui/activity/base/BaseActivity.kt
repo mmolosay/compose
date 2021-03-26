@@ -1,27 +1,22 @@
 package com.ordolabs.compose.ui.activity.base
 
 import android.os.Bundle
-import androidx.annotation.CallSuper
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity(
-    @LayoutRes private val layoutResId: Int
-) : AppCompatActivity() {
+abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
+
+    protected val b: B get() = _binding
+    private lateinit var _binding: B
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layoutResId)
+        _binding = getViewBinding()
+        setContentView(b.root)
+
+        parseStartIntent()
         setUp()
         setViews()
-    }
-
-    /**
-     * Configures non-view components.
-     */
-    @CallSuper
-    protected open fun setUp() {
-        parseStartIntent()
     }
 
     /**
@@ -32,11 +27,16 @@ abstract class BaseActivity(
     }
 
     /**
+     * Configures non-view components.
+     */
+    abstract fun setUp()
+
+    /**
      * Sets activity's views and configures them.
      */
-    protected open fun setViews() {
-        // override me
-    }
+    abstract fun setViews()
+
+    abstract fun getViewBinding(): B
 
     companion object {
         // extra keys and stuff

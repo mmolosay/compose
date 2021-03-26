@@ -8,6 +8,8 @@
         <item name="android:navigationBarColor">@color/theme_navigation_bar</item>
         <item name="android:windowLightStatusBar">true</item>
 
+        <item name="android:colorAccent">@color/theme_accent</item>
+
         <item name="android:textAppearance">@style/TextAppearance</item>
     </style>
 </resources>
