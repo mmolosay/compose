@@ -73,4 +73,6 @@
     <!--~~~~~~~~~~~~~~~~~~~~ STUFF ~~~~~~~~~~~~~~~~~~~~~-->
     <color name="super_red">#ff0000</color>
 
+    <color name="edge_effect">@color/gray_76</color>
+
 </resources>
