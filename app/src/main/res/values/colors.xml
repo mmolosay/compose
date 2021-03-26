@@ -70,6 +70,10 @@
 
     <!--~~~~~~~~~~~~~~~~~~ ANIMATION ~~~~~~~~~~~~~~~~~~~-->
 
+    <!--~~~~~~~~~~~~~~~~~~ HOME CHORD ~~~~~~~~~~~~~~~~~~-->
+    <color name="chord_keyboard_whites">@color/ash_cc</color>
+    <color name="chord_keyboard_blacks">@color/dark_26</color>
+
     <!--~~~~~~~~~~~~~~~~~~~~ STUFF ~~~~~~~~~~~~~~~~~~~~~-->
     <color name="super_red">#ff0000</color>
 

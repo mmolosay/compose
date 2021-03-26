@@ -177,5 +177,10 @@
     </style>
 
     <!--~~~~~~~~~~~~~~~~~~~ STYLEABLE ~~~~~~~~~~~~~~~~~~-->
+    <declare-styleable name="PianoKeyboardView">
+        <attr name="whiteKeysColor" format="color"/>
+        <attr name="blackKeysColor" format="color"/>
+        <attr name="octaveCount" format="integer"/>
+    </declare-styleable>
 
 </resources>
