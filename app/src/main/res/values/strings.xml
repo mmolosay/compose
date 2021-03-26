@@ -1,3 +1,14 @@
 <resources>
+    <!--~~~~~~~~~~~~~~~~~~~~ COMMON ~~~~~~~~~~~~~~~~~~~~-->
     <string name="app_name">Compose</string>
+
+    <!--~~~~~~~~~~~~~~~~~~ MAIN SCREEN ~~~~~~~~~~~~~~~~~-->
+
+    <!--~~~~~~~~~~~~~~~~ RECYCLER ITEMS ~~~~~~~~~~~~~~~~-->
+
+    <!--~~~~~~~~~~~~~~~~~~~~ DIALOGS ~~~~~~~~~~~~~~~~~~~-->
+
+    <!--~~~~~~~~~~~~~~~~~~~~~ STUFF ~~~~~~~~~~~~~~~~~~~~-->
+    <string name="error_unknown">An error occurred, sorry :(</string>
+
 </resources>

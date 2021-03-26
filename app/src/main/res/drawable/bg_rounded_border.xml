@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rounded background with border, use with android:backgroundTint to customize border color -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/transparent" />
+    <corners android:radius="1000dp" />
+    <stroke
+        android:width="@dimen/btn_border_width"
+        android:color="@color/white" />
+    <padding
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp" />
+</shape>
