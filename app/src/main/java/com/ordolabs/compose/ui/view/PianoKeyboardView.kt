@@ -12,10 +12,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import com.ordolabs.compose.R
+import com.ordolabs.compose.util.struct.Note
+import com.ordolabs.compose.util.struct.Theory
 
 class PianoKeyboardView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+
+    var listener: OnKeyboardNoteTouchListener? = null
 
     private var octaveCount: Int = OCTAVE_COUNT_DEFAULT
     private var shouldCoerceInWidth: Boolean = false
@@ -72,18 +76,22 @@ class PianoKeyboardView @JvmOverloads constructor(
         )
     }
 
+    @Suppress("unused")
     fun setWhiteKeysColor(color: Int) {
         whitePaint.color = color
     }
 
+    @Suppress("unused")
     fun setBlackKeysColor(color: Int) {
         blackPaint.color = color
     }
 
+    @Suppress("unused")
     fun setOctaveCout(count: Int) {
         octaveCount = count
     }
 
+    @Suppress("unused")
     fun setShouldCoerceInWidth(state: Boolean) {
         shouldCoerceInWidth = state
     }
@@ -113,42 +121,48 @@ class PianoKeyboardView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event?.actionMasked == MotionEvent.ACTION_DOWN) return true
         if (event == null || event.actionMasked != MotionEvent.ACTION_UP) return false
+
         val white = computeWhiteKeySize()
         val black = computeBlackKeySize()
         val whiteWidthTotal = white.width + WHITE_KEYS_SPACING
-        val whiteTouched = (event.x / whiteWidthTotal).toInt()
+
+        val touched = (event.x / whiteWidthTotal).toInt()
+        val ordinal = touched % 7
 
         if (event.y > black.height) {
-            toastWhite(whiteTouched)
+            listener?.onKeboardKeyTouched(Theory.ChromaticScale.whites[ordinal])
             return true
         }
 
-        val ordinal = whiteTouched % 7
-
         // check black key at left of touched white
         if (ordinal != 0 || ordinal != 3) {
-            val dx =
-                whiteTouched * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
+            val dx = touched * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
             RectF(0f, 0f, black.width, black.height).run {
                 offset(dx, 0f)
                 if (contains(event.x, event.y)) {
-                    toastBlack(whiteTouched, "left")
+                    val whiteNote = Theory.ChromaticScale.whites[ordinal]
+                    val whiteIndex = Theory.ChromaticScale.notes.indexOf(whiteNote)
+                    listener?.onKeboardKeyTouched(Theory.ChromaticScale.notes[whiteIndex - 1])
+                    return true
                 }
             }
         }
 
         // check black key at right of touched white
         if (ordinal != 2 || ordinal != 6) {
-            val dx =
-                (whiteTouched + 1) * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
+            val dx = (touched + 1) * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
             RectF(0f, 0f, black.width, black.height).run {
                 offset(dx, 0f)
                 if (contains(event.x, event.y)) {
-                    toastBlack(whiteTouched, "right")
+                    val whiteNote = Theory.ChromaticScale.whites[ordinal]
+                    val whiteIndex = Theory.ChromaticScale.notes.indexOf(whiteNote)
+                    listener?.onKeboardKeyTouched(Theory.ChromaticScale.notes[whiteIndex + 1])
+                    return true
                 }
             }
         }
 
+        listener?.onKeboardKeyTouched(Theory.ChromaticScale.whites[ordinal])
         return true
     }
 
@@ -244,6 +258,10 @@ class PianoKeyboardView @JvmOverloads constructor(
         val whites = octaveCount * 7
         val whiteWidth = (newWidth - (WHITE_KEYS_SPACING * (whites - 1))) / whites
         return (whiteWidth / WHITE_KEY_WIDTH * WHITE_KEY_HEIGHT).toInt()
+    }
+
+    interface OnKeyboardNoteTouchListener {
+        fun onKeboardKeyTouched(note: Note)
     }
 
     companion object {
