@@ -1,5 +1,6 @@
 package com.ordolabs.compose.ui.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Canvas
@@ -7,7 +8,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.ordolabs.compose.R
 
 class PianoKeyboardView @JvmOverloads constructor(
@@ -95,7 +98,7 @@ class PianoKeyboardView @JvmOverloads constructor(
                 getViewHeightFromWidth(width)
             )
         } else {
-            // if layout_width="wrap_content", set width to one octave exactly
+            // if layout_width="wrap_content", set width to fit all octaves
             val widthSpec = MeasureSpec.getMode(widthMeasureSpec)
             if (widthSpec == MeasureSpec.AT_MOST || widthSpec == MeasureSpec.UNSPECIFIED) {
                 setMeasuredDimension(
@@ -104,6 +107,58 @@ class PianoKeyboardView @JvmOverloads constructor(
                 )
             }
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.actionMasked == MotionEvent.ACTION_DOWN) return true
+        if (event == null || event.actionMasked != MotionEvent.ACTION_UP) return false
+        val white = computeWhiteKeySize()
+        val black = computeBlackKeySize()
+        val whiteWidthTotal = white.width + WHITE_KEYS_SPACING
+        val whiteTouched = (event.x / whiteWidthTotal).toInt()
+
+        if (event.y > black.height) {
+            toastWhite(whiteTouched)
+            return true
+        }
+
+        val ordinal = whiteTouched % 7
+
+        // check black key at left of touched white
+        if (ordinal != 0 || ordinal != 3) {
+            val dx =
+                whiteTouched * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
+            RectF(0f, 0f, black.width, black.height).run {
+                offset(dx, 0f)
+                if (contains(event.x, event.y)) {
+                    toastBlack(whiteTouched, "left")
+                }
+            }
+        }
+
+        // check black key at right of touched white
+        if (ordinal != 2 || ordinal != 6) {
+            val dx =
+                (whiteTouched + 1) * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
+            RectF(0f, 0f, black.width, black.height).run {
+                offset(dx, 0f)
+                if (contains(event.x, event.y)) {
+                    toastBlack(whiteTouched, "right")
+                }
+            }
+        }
+
+        return true
+    }
+
+    private fun toastWhite(i: Int) {
+        Toast.makeText(context, "Touched #$i white key", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun toastBlack(i: Int, side: String) {
+        Toast.makeText(context, "Touched black key at $side of #$i white one", Toast.LENGTH_SHORT)
+            .show()
     }
 
     override fun onDraw(c: Canvas?) {
@@ -125,24 +180,24 @@ class PianoKeyboardView @JvmOverloads constructor(
 
     private fun drawWhiteKeys(c: Canvas, octave: Int) {
         val roundness = WHITE_KEYS_ROUNDESS
-        val (keyWidth, keyHeight) = computeWhiteKeySize()
-        val key = RectF(0f, 0f, keyWidth, keyHeight).apply {
+        val white = computeWhiteKeySize()
+        val key = RectF(0f, 0f, white.width, white.height).apply {
             offset(computeOctavesWidth(octave), 0f)
         }
         for (i in 0 until 7) {
             c.drawRoundRect(key, roundness, roundness, whitePaint)
             c.drawRect(key.left, key.top, key.right, roundness, whitePaint)
-            key.offset(keyWidth + WHITE_KEYS_SPACING, 0f)
+            key.offset(white.width + WHITE_KEYS_SPACING, 0f)
         }
     }
 
     private fun drawBlackKeys(c: Canvas, octave: Int) {
         val roundness = BLACK_KEYS_ROUNDNESS
-        val wKeyWidth = computeWhiteKeySize().first
-        val (bKeyWidth, bKeyHeight) = computeBlackKeySize()
-        val wKeyWidthTotal = (wKeyWidth + WHITE_KEYS_SPACING)
-        val startOffset = wKeyWidth + (WHITE_KEYS_SPACING / 2) - (bKeyWidth / 2)
-        val key = RectF(startOffset, 0f, startOffset + bKeyWidth, bKeyHeight).apply {
+        val white = computeWhiteKeySize()
+        val black = computeBlackKeySize()
+        val wKeyWidthTotal = (white.width + WHITE_KEYS_SPACING)
+        val startOffset = white.width + (WHITE_KEYS_SPACING / 2) - (black.width / 2)
+        val key = RectF(startOffset, 0f, startOffset + black.width, black.height).apply {
             offset(computeOctavesWidth(octave), 0f)
         }
         for (i in 0 until 6) {
@@ -154,31 +209,31 @@ class PianoKeyboardView @JvmOverloads constructor(
         }
     }
 
-    private fun computeWhiteKeySize(): Pair<Float, Float> {
-        return Pair(
+    private fun computeWhiteKeySize(): KeySize {
+        return KeySize(
             getViewHeight() / WHITE_KEY_HEIGHT * WHITE_KEY_WIDTH,
             getViewHeight()
         )
     }
 
-    private fun computeBlackKeySize(): Pair<Float, Float> {
-        return Pair(
+    private fun computeBlackKeySize(): KeySize {
+        return KeySize(
             getViewHeight() / WHITE_KEY_HEIGHT * BLACK_KEY_WIDTH,
             getViewHeight() / WHITE_KEY_HEIGHT * BLACK_KEY_HEIGHT
         )
     }
 
-    private fun computeOctaveSize(): Pair<Float, Float> {
-        computeWhiteKeySize().let {
-            return Pair(
-                (it.first * 7) + (WHITE_KEYS_SPACING * 6),
-                it.second
+    private fun computeOctaveSize(): KeySize {
+        computeWhiteKeySize().let { whiteKey ->
+            return KeySize(
+                (whiteKey.width * 7) + (WHITE_KEYS_SPACING * 6),
+                whiteKey.height
             )
         }
     }
 
     private fun computeOctavesWidth(octaveCount: Int): Float {
-        return (computeOctaveSize().first + WHITE_KEYS_SPACING) * octaveCount
+        return (computeOctaveSize().width + WHITE_KEYS_SPACING) * octaveCount
     }
 
     private fun getViewHeight(): Float {
@@ -208,4 +263,9 @@ class PianoKeyboardView @JvmOverloads constructor(
         private const val WHITE_KEY_HEIGHT = 14.8f
         private const val BLACK_KEY_HEIGHT = 9.6f
     }
+
+    private data class KeySize(
+        val width: Float,
+        val height: Float
+    )
 }
