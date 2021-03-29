@@ -16,6 +16,7 @@ class ChordNotesAdapter(
     private val items = arrayListOf<ChordNoteItem>()
 
     fun addNote(item: ChordNoteItem): Boolean {
+        if (items.size == ITEMS_MAX) return false
         val position = items.size
         items.add(item)
         notifyItemInserted(position)
@@ -57,5 +58,9 @@ class ChordNotesAdapter(
         override fun populate(item: ChordNoteItem) {
             note.text = item.noteName
         }
+    }
+
+    companion object {
+        private const val ITEMS_MAX = 6
     }
 }
