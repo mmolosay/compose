@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_rounded"
+    android:backgroundTint="@color/chord_item_note"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/offset_8"
+    android:paddingVertical="@dimen/offset_4"
+    android:layout_marginEnd="@dimen/offset_8"
+    android:layout_marginBottom="@dimen/offset_4">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/chordNote"
+        style="@style/TextView.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingHorizontal="@dimen/offset_4"
+        android:textColor="@color/white"
+        tools:text="Cb" />
+
+    <FrameLayout
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/bg_rounded"
+        android:backgroundTint="@color/view_close_bg">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:padding="@dimen/offset_4"
+            android:src="@drawable/ic_close"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+</LinearLayout>

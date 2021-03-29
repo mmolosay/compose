@@ -1,22 +1,32 @@
 package com.ordolabs.compose.util.struct
 
-enum class Note {
-    C,
-    C_SHARP, D_FLAT,
-    D,
-    D_SHARP, E_FLAT,
-    E,
-    F,
-    F_SHARP, G_FLAT,
-    G,
-    G_SHARP, A_FLAT,
-    A,
-    A_SHARP, B_FLAT,
-    B
+enum class Note(val displayName: String) {
+    C("C"),
+    C_SHARP("C#"), D_FLAT("Cb"),
+    D("D"),
+    D_SHARP("D#"), E_FLAT("Db"),
+    E("E"),
+    F("F"),
+    F_SHARP("F#"), G_FLAT("Fb"),
+    G("G"),
+    G_SHARP("G#"), A_FLAT("Gb"),
+    A("A"),
+    A_SHARP("A#"), B_FLAT("Ab"),
+    B("B")
+}
+
+enum class Degree(val pos: Int) {
+    TONIC(1),
+    SUPERTONIC(2),
+    MEDIANT(3),
+    SUBDOMINANT(4),
+    DOMINANT(5),
+    SUBMEDIANT(6),
+    LEADING(7)
 }
 
 // TODO: should be not notes, but degrees (?)
-enum class Mode(generative: Note) {
+enum class Mode(val generative: Note) {
     IONIAN(Note.C), // Major
     DORIAN(Note.D),
     PHRYGIAN(Note.E),
@@ -26,6 +36,11 @@ enum class Mode(generative: Note) {
     LOCRIAN(Note.B)
 }
 
+enum class ModeModern(val generative: Note) {
+    MAJOR(Note.C),
+    MINOR(Note.A)
+}
+
 data class Scale(
     val key: Note,
     val mode: Mode,
@@ -33,7 +48,7 @@ data class Scale(
 )
 
 data class ScaleDegree(
-    val degree: Int,
+    val degree: Degree,
     val note: Note
 )
 

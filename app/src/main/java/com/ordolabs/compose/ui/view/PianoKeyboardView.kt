@@ -10,7 +10,6 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import com.ordolabs.compose.R
 import com.ordolabs.compose.util.struct.Note
 import com.ordolabs.compose.util.struct.Theory
@@ -164,15 +163,6 @@ class PianoKeyboardView @JvmOverloads constructor(
 
         listener?.onKeboardKeyTouched(Theory.ChromaticScale.whites[ordinal])
         return true
-    }
-
-    private fun toastWhite(i: Int) {
-        Toast.makeText(context, "Touched #$i white key", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun toastBlack(i: Int, side: String) {
-        Toast.makeText(context, "Touched black key at $side of #$i white one", Toast.LENGTH_SHORT)
-            .show()
     }
 
     override fun onDraw(c: Canvas?) {

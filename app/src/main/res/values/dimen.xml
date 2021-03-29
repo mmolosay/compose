@@ -30,10 +30,10 @@
     <item name="text_spacing_medium" type="dimen" format="float">0.025</item>
     <item name="text_spacing_big" type="dimen" format="float">0.040</item>
 
-    <dimen name="text_size_default">12sp</dimen>
-    <dimen name="text_size_modest">10sp</dimen>
-    <dimen name="text_size_bold">12sp</dimen>
-    <dimen name="text_size_accent">12sp</dimen>
+    <dimen name="text_size_default">15sp</dimen>
+    <dimen name="text_size_modest">12sp</dimen>
+    <dimen name="text_size_bold">15sp</dimen>
+    <dimen name="text_size_accent">15sp</dimen>
 
     <!--~~~~~~~~~~~~~~~~~~~~ COMMON ~~~~~~~~~~~~~~~~~~~~-->
     <dimen name="elevation_0">0dp</dimen>

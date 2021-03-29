@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:background="@drawable/bg_rounded"
+    android:backgroundTint="@color/view_close_bg">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:padding="@dimen/offset_4"
+        android:src="@drawable/ic_close"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</FrameLayout>

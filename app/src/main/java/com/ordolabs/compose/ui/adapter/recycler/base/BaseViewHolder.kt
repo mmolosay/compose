@@ -29,13 +29,13 @@ abstract class BaseViewHolder<T : Any>(itemView: View) :
      */
     fun onBind(item : T) {
         this.itemView.tag = item
-        setViewsOnBind(item)
+        populate(item)
     }
 
     /**
      * Configures [itemView]'s views in [onBind].
      */
-    protected abstract fun setViewsOnBind(item: T)
+    protected abstract fun populate(item: T)
 
     override fun onClick(v: View?) {
         // default empty implementation

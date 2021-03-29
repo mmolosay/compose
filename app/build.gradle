@@ -73,6 +73,9 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:2.1.5"
     implementation "org.koin:koin-android-scope:2.1.5"
 
+    // Third Party Libraries
+    implementation 'com.google.android:flexbox:2.0.1'
+
     // Testing
     testImplementation "junit:junit:4.13.2"
     testImplementation "androidx.test.ext:junit:1.1.2"

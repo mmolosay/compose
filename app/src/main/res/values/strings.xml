@@ -1,10 +1,13 @@
 <resources>
     <!--~~~~~~~~~~~~~~~~~~~~ COMMON ~~~~~~~~~~~~~~~~~~~~-->
-    <string name="app_name">Compose</string>
+    <string name="app_name" translatable="false">Compose</string>
 
     <!--~~~~~~~~~~~~~~~~~~~~~ MAIN ~~~~~~~~~~~~~~~~~~~~~-->
     <string name="home_chord_tab">Chord</string>
     <string name="home_progression_tab">Progression</string>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~ CHORD ~~~~~~~~~~~~~~~~~~~~-->
+    <string name="chord_select_notes">Select chord notes</string>
 
     <!--~~~~~~~~~~~~~~~~ RECYCLER ITEMS ~~~~~~~~~~~~~~~~-->
 
