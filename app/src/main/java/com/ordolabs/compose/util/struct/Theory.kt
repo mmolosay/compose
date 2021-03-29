@@ -54,6 +54,44 @@ data class ScaleDegree(
 
 object Theory {
 
+    const val OCTAVE_NOTE_COUNT = 12
+
+    object Whites {
+
+        const val COUNT = 7
+
+        val notes = arrayOf(
+            Note.C, Note.D, Note.E, Note.F, Note.G, Note.A, Note.B
+        )
+
+        fun getOn(index: Int): Note {
+            val octaveIndex = index % 7
+            return notes[octaveIndex]
+        }
+
+        fun indexOf(note: Note): Int? {
+            return notes.indexOf(note).takeIf { it != -1 }
+        }
+    }
+
+    object Blacks {
+
+        const val COUNT = 5
+
+        val notes = arrayOf(
+            Note.C_SHARP, Note.D_SHARP, Note.F_SHARP, Note.G_SHARP, Note.A_SHARP
+        )
+
+        fun getOn(index: Int): Note {
+            val octaveIndex = index % 7
+            return notes[octaveIndex]
+        }
+
+        fun indexOf(note: Note): Int? {
+            return notes.indexOf(note).takeIf { it != -1 }
+        }
+    }
+
     object ChromaticScale {
 
         val notes = arrayOf(
@@ -67,5 +105,9 @@ object Theory {
         val blacks = arrayOf(
             Note.C_SHARP, Note.D_SHARP, Note.F_SHARP, Note.G_SHARP, Note.A_SHARP
         )
+
+        fun indexOf(note: Note): Int {
+            return notes.indexOf(note)
+        }
     }
 }

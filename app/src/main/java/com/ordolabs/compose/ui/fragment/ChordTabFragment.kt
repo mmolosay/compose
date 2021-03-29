@@ -41,9 +41,9 @@ class ChordTabFragment : BaseFragment<FragmentChordTabBinding>(),
         b.chordNotes.adapter = notesAdapter
     }
 
-    override fun onKeboardKeyTouched(note: Note) {
+    override fun onKeboardKeyTouched(note: Note): Boolean {
         val item = chordVM.makeChordNoteItem(note)
-        notesAdapter.addNote(item)
+        return notesAdapter.addNote(item)
     }
 
     override fun onRecyclerItemClick(position: Int) {

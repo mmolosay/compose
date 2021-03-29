@@ -79,6 +79,7 @@
     <!--~~~~~~~~~~~~~~~~~~ HOME CHORD ~~~~~~~~~~~~~~~~~~-->
     <color name="chord_keyboard_whites">@color/ash_d6</color>
     <color name="chord_keyboard_blacks">@color/dark_26</color>
+    <color name="chord_keyboard_selected">#402196F3</color>
 
     <color name="chord_item_note">@color/sky</color>
 

@@ -16,7 +16,11 @@
     <style name="TextView.Bold">
         <item name="fontFamily">@font/opensans_semibold</item>
         <item name="android:textSize">@dimen/text_size_bold</item>
+    </style>
 
+    <style name="TextView.Light">
+        <item name="fontFamily">@font/opensans_light</item>
+        <item name="android:textSize">@dimen/text_size_light</item>
     </style>
 
     <style name="TextView.Modest">
@@ -178,10 +182,11 @@
 
     <!--~~~~~~~~~~~~~~~~~~~ STYLEABLE ~~~~~~~~~~~~~~~~~~-->
     <declare-styleable name="PianoKeyboardView">
-        <attr name="whiteKeysColor" format="color"/>
-        <attr name="blackKeysColor" format="color"/>
-        <attr name="octaveCount" format="integer"/>
-        <attr name="coerceInWidth" format="boolean"/>
+        <attr name="whiteKeysColor" format="color" />
+        <attr name="blackKeysColor" format="color" />
+        <attr name="selectedKeysColor" format="color" />
+        <attr name="octaveCount" format="integer" />
+        <attr name="coerceInWidth" format="boolean" />
     </declare-styleable>
 
 </resources>

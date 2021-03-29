@@ -15,10 +15,11 @@ class ChordNotesAdapter(
 
     private val items = arrayListOf<ChordNoteItem>()
 
-    fun addNote(item: ChordNoteItem) {
+    fun addNote(item: ChordNoteItem): Boolean {
         val position = items.size
         items.add(item)
         notifyItemInserted(position)
+        return true
     }
 
     override fun setItems(items: List<ChordNoteItem>) {

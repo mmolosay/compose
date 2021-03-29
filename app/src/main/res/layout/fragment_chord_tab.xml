@@ -56,6 +56,7 @@
                 app:blackKeysColor="@color/chord_keyboard_blacks"
                 app:coerceInWidth="true"
                 app:octaveCount="@integer/chord_keyboard_octaves"
+                app:selectedKeysColor="@color/chord_keyboard_selected"
                 app:whiteKeysColor="@color/chord_keyboard_whites" />
 
         </FrameLayout>
@@ -78,5 +79,18 @@
         tools:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
         tools:listitem="@layout/item_chord_note"
         tools:orientation="horizontal" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/chordChord"
+        style="@style/TextView.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset_16"
+        android:textSize="@dimen/text_size_32"
+
+        app:layout_constraintEnd_toStartOf="@+id/glEnd"
+        app:layout_constraintStart_toStartOf="@+id/glStart"
+        app:layout_constraintTop_toBottomOf="@+id/chordNotes"
+        tools:text="Dadd9/F#" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

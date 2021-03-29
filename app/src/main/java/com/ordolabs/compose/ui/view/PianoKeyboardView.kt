@@ -10,6 +10,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.graphics.ColorUtils
 import com.ordolabs.compose.R
 import com.ordolabs.compose.util.struct.Note
 import com.ordolabs.compose.util.struct.Theory
@@ -23,41 +24,50 @@ class PianoKeyboardView @JvmOverloads constructor(
     private var octaveCount: Int = OCTAVE_COUNT_DEFAULT
     private var shouldCoerceInWidth: Boolean = false
 
+    private val selected = arrayListOf<SelectedKey>()
+
     private val underneathPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         color = KEYS_COLOR_UNDERNEATH
     }
 
-    private val whitePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val keysPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = WHITE_KEYS_COLOR_DEFAULT
+        color = KEYS_COLOR_UNDERNEATH
     }
 
-    private val blackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        color = BLACK_KEYS_COLOR_DEFAULT
-    }
+    private var whitesColor = WHITE_KEYS_COLOR_DEFAULT
+    private var blacksColor = BLACK_KEYS_COLOR_DEFAULT
+    private var selectedColor = SELECTED_KEYS_COLOR_DEFAULT
 
     init {
         val typed = context.obtainStyledAttributes(attrs, R.styleable.PianoKeyboardView)
         parseWhiteKeysColorAttr(typed)
         parseBlackKeysColorAttr(typed)
+        parseSelectedKeysColorAttr(typed)
         parseOctaveCountAttr(typed)
         parseShouldCoerceInWidthAttr(typed)
         typed.recycle()
     }
 
     private fun parseWhiteKeysColorAttr(typed: TypedArray) {
-        whitePaint.color = typed.getColor(
+        whitesColor = typed.getColor(
             R.styleable.PianoKeyboardView_whiteKeysColor,
             WHITE_KEYS_COLOR_DEFAULT
         )
     }
 
     private fun parseBlackKeysColorAttr(typed: TypedArray) {
-        blackPaint.color = typed.getColor(
+        blacksColor = typed.getColor(
             R.styleable.PianoKeyboardView_blackKeysColor,
             BLACK_KEYS_COLOR_DEFAULT
+        )
+    }
+
+    private fun parseSelectedKeysColorAttr(typed: TypedArray) {
+        selectedColor = typed.getColor(
+            R.styleable.PianoKeyboardView_selectedKeysColor,
+            SELECTED_KEYS_COLOR_DEFAULT
         )
     }
 
@@ -77,12 +87,17 @@ class PianoKeyboardView @JvmOverloads constructor(
 
     @Suppress("unused")
     fun setWhiteKeysColor(color: Int) {
-        whitePaint.color = color
+        whitesColor = color
     }
 
     @Suppress("unused")
     fun setBlackKeysColor(color: Int) {
-        blackPaint.color = color
+        blacksColor = color
+    }
+
+    @Suppress("unused")
+    fun setSelectedKeysColor(color: Int) {
+        selectedColor = color
     }
 
     @Suppress("unused")
@@ -122,47 +137,57 @@ class PianoKeyboardView @JvmOverloads constructor(
         if (event == null || event.actionMasked != MotionEvent.ACTION_UP) return false
 
         val white = computeWhiteKeySize()
+        val whiteWidthTotal = white.width + WHITE_KEYS_SPACING
+
+        val index = (event.x / whiteWidthTotal).toInt()
+
+        // could check here if (event.y > black.height) then white, but I will not :>
+
+        checkBlackAside(index, onLeft = true, event).let { found -> if (found) return true }
+        checkBlackAside(index, onLeft = false, event).let { found -> if (found) return true }
+
+        val note = Theory.Whites.getOn(index)
+        if (listener?.onKeboardKeyTouched(note) == true) {
+            val ordinal = index % Theory.Whites.COUNT
+            val octave = index / Theory.Whites.COUNT
+            val key = SelectedKey(ordinal, octave, isWhite = true)
+            selectKey(key)
+        }
+        return true
+    }
+
+    private fun checkBlackAside(anchorWhite: Int, onLeft: Boolean, event: MotionEvent): Boolean {
+        val octaveIndex = anchorWhite % 7
+        if (onLeft && (octaveIndex == 0 || octaveIndex == 3)) return false
+        if (!onLeft && (octaveIndex == 2 || octaveIndex == 6)) return false
+        val white = computeWhiteKeySize()
         val black = computeBlackKeySize()
         val whiteWidthTotal = white.width + WHITE_KEYS_SPACING
 
-        val touched = (event.x / whiteWidthTotal).toInt()
-        val ordinal = touched % 7
-
-        if (event.y > black.height) {
-            listener?.onKeboardKeyTouched(Theory.ChromaticScale.whites[ordinal])
-            return true
+        val whiteToLeft = anchorWhite + if (onLeft) 0 else 1
+        val dx = whiteToLeft * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
+        RectF(0f, 0f, black.width, black.height).run {
+            offset(dx, 0f)
+            if (!contains(event.x, event.y)) return false
         }
 
-        // check black key at left of touched white
-        if (ordinal != 0 || ordinal != 3) {
-            val dx = touched * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
-            RectF(0f, 0f, black.width, black.height).run {
-                offset(dx, 0f)
-                if (contains(event.x, event.y)) {
-                    val whiteNote = Theory.ChromaticScale.whites[ordinal]
-                    val whiteIndex = Theory.ChromaticScale.notes.indexOf(whiteNote)
-                    listener?.onKeboardKeyTouched(Theory.ChromaticScale.notes[whiteIndex - 1])
-                    return true
-                }
-            }
-        }
+        val whiteNote = Theory.Whites.getOn(anchorWhite)
+        val whiteIndex = Theory.ChromaticScale.indexOf(whiteNote)
+        val blackIndex = whiteIndex + if (onLeft) -1 else +1
 
-        // check black key at right of touched white
-        if (ordinal != 2 || ordinal != 6) {
-            val dx = (touched + 1) * whiteWidthTotal - (WHITE_KEYS_SPACING / 2) - (black.width / 2)
-            RectF(0f, 0f, black.width, black.height).run {
-                offset(dx, 0f)
-                if (contains(event.x, event.y)) {
-                    val whiteNote = Theory.ChromaticScale.whites[ordinal]
-                    val whiteIndex = Theory.ChromaticScale.notes.indexOf(whiteNote)
-                    listener?.onKeboardKeyTouched(Theory.ChromaticScale.notes[whiteIndex + 1])
-                    return true
-                }
-            }
+        val note = Theory.ChromaticScale.notes[blackIndex]
+        if (listener?.onKeboardKeyTouched(note) == true) {
+            val ordinal = Theory.Blacks.indexOf(note)!!
+            val octave = anchorWhite / Theory.Whites.COUNT
+            val key = SelectedKey(ordinal, octave, isWhite = false)
+            selectKey(key)
         }
-
-        listener?.onKeboardKeyTouched(Theory.ChromaticScale.whites[ordinal])
         return true
+    }
+
+    private fun selectKey(key: SelectedKey) {
+        selected.add(key)
+        invalidate()
     }
 
     override fun onDraw(c: Canvas?) {
@@ -189,8 +214,11 @@ class PianoKeyboardView @JvmOverloads constructor(
             offset(computeOctavesWidth(octave), 0f)
         }
         for (i in 0 until 7) {
-            c.drawRoundRect(key, roundness, roundness, whitePaint)
-            c.drawRect(key.left, key.top, key.right, roundness, whitePaint)
+            val isSelected = selected.find { it.hasAll(i, octave, isWhite = true) } != null
+            keysPaint.color = getKeyColor(whitesColor, isSelected)
+
+            c.drawRoundRect(key, roundness, roundness, keysPaint)
+            c.drawRect(key.left, key.top, key.right, roundness, keysPaint)
             key.offset(white.width + WHITE_KEYS_SPACING, 0f)
         }
     }
@@ -206,11 +234,19 @@ class PianoKeyboardView @JvmOverloads constructor(
         }
         for (i in 0 until 6) {
             if (i != 2) {
-                c.drawRoundRect(key, roundness, roundness, blackPaint)
-                c.drawRect(key.left, key.top, key.right, roundness, blackPaint)
+                val isSelected = selected.find { it.hasAll(i, octave, isWhite = false) } != null
+                keysPaint.color = getKeyColor(blacksColor, isSelected)
+
+                c.drawRoundRect(key, roundness, roundness, keysPaint)
+                c.drawRect(key.left, key.top, key.right, roundness, keysPaint)
             }
             key.offset(wKeyWidthTotal, 0f)
         }
+    }
+
+    private fun getKeyColor(base: Int, isSelected: Boolean): Int {
+        if (!isSelected) return base
+        return ColorUtils.compositeColors(selectedColor, base)
     }
 
     private fun computeWhiteKeySize(): KeySize {
@@ -251,12 +287,16 @@ class PianoKeyboardView @JvmOverloads constructor(
     }
 
     interface OnKeyboardNoteTouchListener {
-        fun onKeboardKeyTouched(note: Note)
+        /**
+         * @return Is [note] was consumed.
+         */
+        fun onKeboardKeyTouched(note: Note): Boolean
     }
 
     companion object {
         private const val WHITE_KEYS_COLOR_DEFAULT = Color.LTGRAY
         private const val BLACK_KEYS_COLOR_DEFAULT = Color.DKGRAY
+        private const val SELECTED_KEYS_COLOR_DEFAULT = 0x400000ff // 25% blue
         private const val KEYS_COLOR_UNDERNEATH = Color.BLACK
 
         private const val OCTAVE_COUNT_DEFAULT = 2
@@ -276,4 +316,14 @@ class PianoKeyboardView @JvmOverloads constructor(
         val width: Float,
         val height: Float
     )
+
+    private data class SelectedKey(
+        val ordinal: Int,
+        val octave: Int,
+        val isWhite: Boolean
+    ) {
+        fun hasAll(ordinal: Int, octave: Int, isWhite: Boolean): Boolean {
+            return (this.ordinal == ordinal && this.octave == octave && this.isWhite == isWhite)
+        }
+    }
 }

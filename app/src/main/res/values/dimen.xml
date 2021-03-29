@@ -32,6 +32,7 @@
 
     <dimen name="text_size_default">15sp</dimen>
     <dimen name="text_size_modest">12sp</dimen>
+    <dimen name="text_size_light">12sp</dimen>
     <dimen name="text_size_bold">15sp</dimen>
     <dimen name="text_size_accent">15sp</dimen>
 
