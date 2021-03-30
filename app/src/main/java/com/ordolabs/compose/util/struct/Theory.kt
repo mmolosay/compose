@@ -149,5 +149,14 @@ object Theory {
         fun indexOf(key: Key): Int {
             return keys.indexOf(key)
         }
+
+        fun byOrdinal(ordinal: Int, isWhite: Boolean): Key {
+            return if (isWhite) Whites.getAt(ordinal) else Blacks.getAt(ordinal)
+        }
+
+        fun fromOrdinalToIndex(ordinal: Int, isWhite: Boolean): Int {
+            val key = if (isWhite) Whites.getAt(ordinal) else Blacks.getAt(ordinal)
+            return indexOf(key)
+        }
     }
 }

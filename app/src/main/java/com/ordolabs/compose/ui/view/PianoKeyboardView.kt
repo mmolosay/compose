@@ -12,6 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.graphics.ColorUtils
 import com.ordolabs.compose.R
+import com.ordolabs.compose.util.struct.Key
 import com.ordolabs.compose.util.struct.Note
 import com.ordolabs.compose.util.struct.Theory
 
@@ -190,11 +191,7 @@ class PianoKeyboardView @JvmOverloads constructor(
             if (!contains(event.x, event.y)) return false
         }
 
-        val whiteNote = Theory.Whites.getAt(anchorWhite)
-        val whiteIndex = Theory.ChromaticScale.indexOf(whiteNote)
-        val blackIndex = whiteIndex + if (onLeft) -1 else +1
-
-        val key = Theory.ChromaticScale.keys[blackIndex]
+        val key = getBlackKeyAside(anchorWhite, onLeft)
         val octave = anchorWhite / Theory.Whites.COUNT
         val note = Note(key, octave)
         if (listener?.onKeboardKeyClick(note) == true) {
@@ -247,11 +244,9 @@ class PianoKeyboardView @JvmOverloads constructor(
         }
         for (i in 0 until 6) {
             if (i != 2) {
-                val leftWhite = Theory.Whites.getAt(i)
-                val leftWhiteIndex = Theory.ChromaticScale.indexOf(leftWhite)
-                val blackKey = Theory.ChromaticScale.getAt(leftWhiteIndex + 1)
-                val blackIndex = Theory.Blacks.indexOf(blackKey)!!
-                val isSelected = isKeySelected(blackIndex, octave, isWhite = false)
+                val blackKey = getBlackKeyAside(i, onLeft = false)
+                val ordinal = Theory.Blacks.indexOf(blackKey)!!
+                val isSelected = isKeySelected(ordinal, octave, isWhite = false)
                 keysPaint.color = getKeyColor(blacksColor, isSelected)
 
                 c.drawRoundRect(key, roundness, roundness, keysPaint)
@@ -304,10 +299,16 @@ class PianoKeyboardView @JvmOverloads constructor(
     }
 
     private fun isKeySelected(ordinal: Int, octave: Int, isWhite: Boolean): Boolean {
-        val note = if (isWhite) Theory.Whites.getAt(ordinal) else Theory.Blacks.getAt(ordinal)
+        val key = if (isWhite) Theory.Whites.getAt(ordinal) else Theory.Blacks.getAt(ordinal)
         return selected.find {
-            it.key == note && it.octave == octave
+            it.key == key && it.octave == octave
         } != null
+    }
+
+    private fun getBlackKeyAside(whiteOrdinal: Int, onLeft: Boolean): Key {
+        val whiteIndex = Theory.ChromaticScale.fromOrdinalToIndex(whiteOrdinal, isWhite = true)
+        val blackIndex = whiteIndex + if (onLeft) -1 else +1
+        return Theory.ChromaticScale.getAt(blackIndex)
     }
 
     interface OnKeyboardNoteTouchListener {
