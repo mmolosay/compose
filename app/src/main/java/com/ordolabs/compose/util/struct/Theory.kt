@@ -1,18 +1,28 @@
 package com.ordolabs.compose.util.struct
 
-enum class Note(val displayName: String) {
-    C("C"),
-    C_SHARP("C#"), D_FLAT("Cb"),
-    D("D"),
-    D_SHARP("D#"), E_FLAT("Db"),
-    E("E"),
-    F("F"),
-    F_SHARP("F#"), G_FLAT("Fb"),
-    G("G"),
-    G_SHARP("G#"), A_FLAT("Gb"),
-    A("A"),
-    A_SHARP("A#"), B_FLAT("Ab"),
-    B("B")
+data class Key(
+    val name: String
+) {
+
+    fun simplify(): String {
+        if (name.length == 1) return name
+        val base = name.substring(0, 1)
+        val sharps = name.count { it == Theory.SHARP }
+        val flats = name.count { it == Theory.FLAT }
+        val pitch = sharps - flats
+        val baseIndex = Theory.ChromaticScale.keys.indexOfFirst { it.name == base }
+        val resultIndex = baseIndex + pitch
+        return Theory.ChromaticScale.getAt(resultIndex).name
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is Key) return false
+        return (other.simplify() == this.simplify())
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
 }
 
 enum class Degree(val pos: Int) {
@@ -25,52 +35,58 @@ enum class Degree(val pos: Int) {
     LEADING(7)
 }
 
-// TODO: should be not notes, but degrees (?)
-enum class Mode(val generative: Note) {
-    IONIAN(Note.C), // Major
-    DORIAN(Note.D),
-    PHRYGIAN(Note.E),
-    LYDIAN(Note.F),
-    MIXOLYDIAN(Note.G),
-    AEOLIAN(Note.A), // Minor
-    LOCRIAN(Note.B)
+enum class Mode {
+    IONIAN, // Major
+    DORIAN,
+    PHRYGIAN,
+    LYDIAN,
+    MIXOLYDIAN,
+    AEOLIAN, // Minor
+    LOCRIAN
 }
 
-enum class ModeModern(val generative: Note) {
-    MAJOR(Note.C),
-    MINOR(Note.A)
+enum class ModeModern {
+    MAJOR,
+    MINOR
 }
+
+data class Note(
+    val key: Key,
+    val octave: Int
+)
 
 data class Scale(
-    val key: Note,
+    val key: Key,
     val mode: Mode,
     val degrees: Array<ScaleDegree>
 )
 
 data class ScaleDegree(
     val degree: Degree,
-    val note: Note
+    val key: Key
 )
 
 object Theory {
 
-    const val OCTAVE_NOTE_COUNT = 12
+    const val SHARP = '#'
+    const val FLAT = 'b'
+
+    const val OCTAVE_KEY_COUNT = 12
 
     object Whites {
 
         const val COUNT = 7
 
-        val notes = arrayOf(
-            Note.C, Note.D, Note.E, Note.F, Note.G, Note.A, Note.B
-        )
+        val keys: Array<Key> get() = ChromaticScale.whites
 
-        fun getOn(index: Int): Note {
-            val octaveIndex = index % 7
-            return notes[octaveIndex]
+        fun getAt(index: Int): Key {
+            val octaveIndex = if (index < 0) keys.size + (index % COUNT)
+            else index % COUNT
+            return keys[octaveIndex]
         }
 
-        fun indexOf(note: Note): Int? {
-            return notes.indexOf(note).takeIf { it != -1 }
+        fun indexOf(key: Key): Int? {
+            return this.keys.indexOf(key).takeIf { it != -1 }
         }
     }
 
@@ -78,36 +94,60 @@ object Theory {
 
         const val COUNT = 5
 
-        val notes = arrayOf(
-            Note.C_SHARP, Note.D_SHARP, Note.F_SHARP, Note.G_SHARP, Note.A_SHARP
-        )
+        val keys: Array<Key> get() = ChromaticScale.blacks
 
-        fun getOn(index: Int): Note {
-            val octaveIndex = index % 7
-            return notes[octaveIndex]
+        fun getAt(index: Int): Key {
+            val octaveIndex = if (index < 0) keys.size + (index % COUNT)
+            else index % COUNT
+            return keys[octaveIndex]
         }
 
-        fun indexOf(note: Note): Int? {
-            return notes.indexOf(note).takeIf { it != -1 }
+        fun indexOf(key: Key): Int? {
+            return keys.indexOf(key).takeIf { it != -1 }
         }
     }
 
     object ChromaticScale {
 
-        val notes = arrayOf(
-            Note.C, Note.C_SHARP, Note.D, Note.D_SHARP,
-            Note.E, Note.F, Note.F_SHARP, Note.G,
-            Note.G_SHARP, Note.A, Note.A_SHARP, Note.B
+        val keys = arrayOf(
+            Key("C"),
+            Key("C#"),
+            Key("D"),
+            Key("D#"),
+            Key("E"),
+            Key("F"),
+            Key("F#"),
+            Key("G"),
+            Key("G#"),
+            Key("A"),
+            Key("A#"),
+            Key("B")
         )
         val whites = arrayOf(
-            Note.C, Note.D, Note.E, Note.F, Note.G, Note.A, Note.B
+            Key("C"),
+            Key("D"),
+            Key("E"),
+            Key("F"),
+            Key("G"),
+            Key("A"),
+            Key("B")
         )
         val blacks = arrayOf(
-            Note.C_SHARP, Note.D_SHARP, Note.F_SHARP, Note.G_SHARP, Note.A_SHARP
+            Key("C#"),
+            Key("D#"),
+            Key("F#"),
+            Key("G#"),
+            Key("A#")
         )
 
-        fun indexOf(note: Note): Int {
-            return notes.indexOf(note)
+        fun getAt(index: Int): Key {
+            val octaveIndex = if (index < 0) keys.size + (index % OCTAVE_KEY_COUNT)
+            else index % OCTAVE_KEY_COUNT
+            return keys[octaveIndex]
+        }
+
+        fun indexOf(key: Key): Int {
+            return keys.indexOf(key)
         }
     }
 }

@@ -10,16 +10,28 @@ import com.ordolabs.compose.ui.adapter.recycler.base.OnRecyclerItemClicksListene
 import com.ordolabs.compose.util.viewId
 
 class ChordNotesAdapter(
-    l: OnRecyclerItemClicksListener
+    l: OnRecyclerItemClicksListener<ChordNoteItem>
 ) : BaseAdapter<ChordNoteItem, ChordNotesAdapter.ChordNoteViewHolder>(l) {
 
     private val items = arrayListOf<ChordNoteItem>()
 
-    fun addNote(item: ChordNoteItem): Boolean {
+    fun addOrRemoveNote(item: ChordNoteItem): Boolean {
+        return if (items.contains(item)) removeNote(item)
+        else addNote(item)
+    }
+
+    private fun addNote(item: ChordNoteItem): Boolean {
         if (items.size == ITEMS_MAX) return false
         val position = items.size
         items.add(item)
         notifyItemInserted(position)
+        return true
+    }
+
+    private fun removeNote(item: ChordNoteItem): Boolean {
+        val position = items.indexOf(item).takeIf { it != -1 } ?: return false
+        items.removeAt(position)
+        notifyItemRemoved(position)
         return true
     }
 
@@ -47,6 +59,10 @@ class ChordNotesAdapter(
         return R.layout.item_chord_note
     }
 
+    override fun getItemAt(position: Int): ChordNoteItem? {
+        return items.getOrNull(position)
+    }
+
     override fun getItemCount(): Int {
         return items.size
     }
@@ -56,7 +72,7 @@ class ChordNotesAdapter(
         private val note by root.viewId<AppCompatTextView>(R.id.chordNote)
 
         override fun populate(item: ChordNoteItem) {
-            note.text = item.noteName
+            note.text = item.note.key.name
         }
     }
 

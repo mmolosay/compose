@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
  * An abstract implementation of [RecyclerView.Adapter].
  */
 abstract class BaseAdapter<T : Any, VH : BaseViewHolder<T>>(
-    var clicksListener: OnRecyclerItemClicksListener
+    var clicksListener: OnRecyclerItemClicksListener<T>
 ) : RecyclerView.Adapter<VH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -42,6 +42,11 @@ abstract class BaseAdapter<T : Any, VH : BaseViewHolder<T>>(
     protected abstract fun getItemViewLayout(viewType: Int): Int
 
     /**
+     * Specifies way of obtaining item [T] at [position].
+     */
+    protected abstract fun getItemAt(position: Int): T?
+
+    /**
      * Configurates specified [holder] and its view.
      */
     @CallSuper
@@ -54,18 +59,22 @@ abstract class BaseAdapter<T : Any, VH : BaseViewHolder<T>>(
      * Would be called on [VH]'s view click.
      */
     private fun performOnItemViewClick(holder: VH) {
+        val position = holder.bindingAdapterPosition
+        val item = getItemAt(position)
         onItemViewClick(holder)
         holder.onClick(holder.itemView)
-        clicksListener.onRecyclerItemClick(holder.bindingAdapterPosition)
+        clicksListener.onRecyclerItemClick(position, item)
     }
 
     /**
      * Would be called on [VH]'s view long click.
      */
     private fun performOnItemViewLongClick(holder: VH): Boolean {
+        val position = holder.bindingAdapterPosition
+        val item = getItemAt(position)
         onItemViewLongClick(holder)
         val consumed = holder.onLongClick(holder.itemView)
-        clicksListener.onRecyclerItemLongClick(holder.bindingAdapterPosition)
+        clicksListener.onRecyclerItemLongClick(position, item)
         return consumed
     }
 

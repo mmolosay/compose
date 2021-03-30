@@ -7,7 +7,6 @@ import com.ordolabs.compose.viewmodel.base.BaseViewModel
 class ChordViewModel : BaseViewModel() {
 
     fun makeChordNoteItem(note: Note): ChordNoteItem {
-        val noteName = note.displayName
-        return ChordNoteItem(noteName)
+        return ChordNoteItem(note)
     }
 }

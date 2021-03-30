@@ -6,6 +6,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.ordolabs.compose.databinding.FragmentChordTabBinding
+import com.ordolabs.compose.model.ui.ChordNoteItem
 import com.ordolabs.compose.ui.adapter.recycler.ChordNotesAdapter
 import com.ordolabs.compose.ui.adapter.recycler.base.OnRecyclerItemClicksListener
 import com.ordolabs.compose.ui.fragment.base.BaseFragment
@@ -16,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChordTabFragment : BaseFragment<FragmentChordTabBinding>(),
     PianoKeyboardView.OnKeyboardNoteTouchListener,
-    OnRecyclerItemClicksListener {
+    OnRecyclerItemClicksListener<ChordNoteItem> {
 
     private val chordVM: ChordViewModel by viewModel()
 
@@ -41,13 +42,14 @@ class ChordTabFragment : BaseFragment<FragmentChordTabBinding>(),
         b.chordNotes.adapter = notesAdapter
     }
 
-    override fun onKeboardKeyTouched(note: Note): Boolean {
+    override fun onKeboardKeyClick(note: Note): Boolean {
         val item = chordVM.makeChordNoteItem(note)
-        return notesAdapter.addNote(item)
+        return notesAdapter.addOrRemoveNote(item)
     }
 
-    override fun onRecyclerItemClick(position: Int) {
-        super.onRecyclerItemClick(position)
+    override fun onRecyclerItemClick(position: Int, item: ChordNoteItem?) {
+        item ?: return
+        b.chordKeyboard.unselectNote(item.note)
     }
 
     override fun getViewBinding(i: LayoutInflater, c: ViewGroup?): FragmentChordTabBinding {
